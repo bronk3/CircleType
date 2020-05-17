@@ -33,58 +33,43 @@
         var mom;
         var gens = [];
         $(document).ready(function () {
-            //generations
-            mom = document.getElementById('gen1-1');
-            grandmom = document.getElementById('gen2-1');
-            greatGrandMom = document.getElementById('gen3-1');
-            var tree = [mom, grandmom, greatGrandMom];
-
-            //space between genrations
-            var space = 30;
-
-            // get all the lengths of ever generation
-            var radiusMom = mom.querySelector("span").offsetWidth / 2;
-            var radiusGrandMom = Array.from(grandmom.querySelectorAll("span")).reduce((acc, cur) => { return acc + cur.offsetWidth; }, 0);
-            var radiusGreatGrandMom = Array.from(greatGrandMom.querySelectorAll("span")).reduce((acc, cur) => { return acc + cur.offsetWidth }, 0);
-
-            // calculate the largest circumference
-            var circumference = radiusMom >= radiusGrandMom ? radiusMom : radiusGrandMom >= radiusGreatGrandMom ? radiusGrandMom : radiusGreatGrandMom;
-            var letters = mom.innerText.length >= grandmom.innerText.length ? mom.innerText.length : grandmom.innerText.length >= greatGrandMom.innerText.length ? grandmom.innerText.length : greatGrandMom.innerText.length;
-
             function splitter(letter) {
                 return [...letter.replace(/\n/g, "*")];
             }
 
-            function spacer(array) {
-                return array.split("*");
-            }
-
-
             radius = 0;
+            var minSpace = 0;
+            var tree = document.getElementsByClassName("tree")[0].children;
             for (var i = 0; i < tree.length; i++) {
                 var circle = new CircleType(tree[i], splitter);
-                radius = radius >= circle._minRadius ? radius : circle._minRadius;//(circumference) / Math.PI) + (space * i)
+                radius = radius >= circle._radius ? radius : circle._radius;//(circumference) / Math.PI) + (space * i)
+                minSpace = minSpace >= circle._lineHeight ? minSpace : circle._lineHeight;//(circumference) / Math.PI) + (space * i)
                 gens.push(circle);
             }
 
+            console.log(radius, minSpace);
+            var space = 60;
+            space = space != null ? space : minSpace;
+
+            // Biggest to smallest
             gens.forEach((e, i) => {
-                e.radius(((radius * 2 - (space * (gens.length - i)))), true);
-                e.halfCircle(spacer);
+                e.element.style.top = space * i + "px";
+                var GenRadius = (radius) * 2 - (space * i); // * 2 + (space * (gens.length - i));
+                // console.log(e.element.id, GenRadius);
+                e.radius(GenRadius);
+                e.halfCircle();
             });
         });
 
     </script>
     <style>
+        body {
+            font-size: 2ch;
+            line-height: 1.2em;
+        }
+
         .geneology {
             position: relative;
-        }
-
-        .geneology>div {
-            /* position: absolute; */
-            /* left: 10; */
-        }
-
-        .geneology {
             width: 100%;
             margin: 0 auto;
         }
@@ -99,47 +84,12 @@
             right: 0;
         }
 
-        .gen1 {
-            top: 60px;
-        }
-
-        .gen2 {
-            top: 30px;
-        }
-
-        .gen3 {
-            top: 0px;
-        }
-
         .inline {
             display: inline-block;
         }
 
         .inline>div {
             display: inline-block;
-        }
-
-
-        .flex-even {
-            /* display: flex;
-            justify-content: space-between; */
-        }
-
-        .flex-center {
-            /* display: flex;
-            justify-content: center; */
-        }
-
-        .flex-even>div:after {
-            /* content: "|";
-            position: relative;
-            top: 0;
-            bottom: 0;
-            right: 0; */
-        }
-
-        body {
-            font-size: 2ch;
         }
     </style>
 
@@ -148,6 +98,32 @@
         <div style="width: 10px; height: 10px; visibility: hidden;"> </div>
         <div class="geneology">
             <div class="tree">
+                <div id="gen4-1" class="flex-even gen gen4">
+                    <div id="gen2-1-1" class="person">
+                        <span>Mary Florence Campbell</span>
+                    </div>
+                    <div id="gen2-2-1" class="person">
+                        <span>John Brown</span>
+                    </div>
+                    <div id="gen2-1-1" class="person">
+                        <span>Mary Amelia Jones</span>
+                    </div>
+                    <div id="gen2-2-1" class="person">
+                        <span>Cornelius White</span>
+                    </div>
+                    <div id="gen2-1-1" class="person">
+                        <span>Mary Florence Campbell</span>
+                    </div>
+                    <div id="gen2-2-1" class="person">
+                        <span>John Brown</span>
+                    </div>
+                    <div id="gen2-1-1" class="person">
+                        <span>Mary Amelia Jones</span>
+                    </div>
+                    <div id="gen2-2-1" class="person">
+                        <span>Cornelius White</span>
+                    </div>
+                </div>
                 <div id="gen3-1" class="flex-even gen gen3">
                     <div id="gen2-1-1" class="person">
                         <span>Mary Florence Campbell</span>
